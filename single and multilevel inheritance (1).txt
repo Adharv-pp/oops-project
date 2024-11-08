@@ -1,0 +1,208 @@
+__________________________single and multilevel inheritance__________________________
+
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class User
+{
+private:
+    string name;
+    string address;
+    string phoneNumber;
+    int foodChoice;
+
+public:
+    User()
+    {
+        name = "";
+        address = "";
+        phoneNumber = "";
+        foodChoice = 0;
+    }
+
+    User(string name, string address, string phoneNumber = "CUSTOMER PH NO")
+    {
+        this->name = name;
+        this->address = address;
+        this->phoneNumber = phoneNumber;
+        this->foodChoice = 0;
+    }
+
+    void enterDetails()
+    {
+        cin.ignore();
+        cout << "\nEnter your name: ";
+        cin >> name;
+        cout << "\nEnter your address (please don't leave space): ";
+        cin >> address;
+        cout << "\nEnter your phone number: ";
+        cin >> phoneNumber;
+    }
+
+    void setFoodChoice(int choice)
+    {
+        foodChoice = choice;
+    }
+
+    int getFoodChoice()
+    {
+        return foodChoice;
+    }
+
+    void displayDetails()
+    {
+        cout << "\nUser Details:\n";
+        cout << "Name: " << name << endl;
+        cout << "Address: " << address << endl;
+        cout << "Phone Number: " << phoneNumber << endl;
+    }
+
+    string getName()
+    {
+        return name;
+    }
+};
+
+class UserOrder : public User
+{
+private:
+    string orderID;
+    string orderDate;
+
+public:
+    UserOrder() : User()
+    {
+        orderID = "";
+        orderDate = "";
+    }
+
+    void setOD(string id, string date)
+    {
+        orderID = id;
+        orderDate = date;
+    }
+
+    void trackOrder(string scheduledTime)
+    {
+        cout << "\nTracking Order Details:\n";
+        cout << "Order ID: " << orderID << endl;
+        cout << "Order Date: " << orderDate << endl;
+        cout << "Scheduled Delivery Time: " << scheduledTime << endl;
+    }
+};
+
+class OrderSchedule : public UserOrder
+{
+private:
+    string scheduledTime;
+
+public:
+    OrderSchedule() : UserOrder()
+    {
+        scheduledTime = "";
+    }
+
+    void setScheduledTime(string time)
+    {
+        scheduledTime = time;
+    }
+
+    string getScheduledTime()
+    {
+        return scheduledTime;
+    }
+};
+
+class FoodOrderingSystem
+{
+public:
+    void displayMenu()
+    {
+        cout << "\nMENU:\n";
+        cout << "1. Masala dosa - Rs 80\n";
+        cout << "2. Upma - Rs 50\n";
+        cout << "3. Idli - Rs 30\n";
+        cout << "4. Vada - Rs 45\n";
+        cout << "5. Biryani - Rs 120\n";
+    }
+
+    double getPrice(int choice)
+    {
+        switch (choice)
+        {
+        case 1:
+            return 80;
+        case 2:
+            return 50;
+        case 3:
+            return 30;
+        case 4:
+            return 45;
+        case 5:
+            return 120;
+        default:
+            return 0.0;
+        }
+    }
+};
+
+int main()
+{
+    int numUsers;
+    cout << "Enter the number of users: ";
+    cin >> numUsers;
+
+    OrderSchedule *users = new OrderSchedule[numUsers];
+    FoodOrderingSystem fos;
+    int foodChoice;
+    double price;
+
+    for (int i = 0; i < numUsers; i++)
+    {
+        cout << "\nEntering details for User " << (i + 1) << ":\n";
+        users[i].enterDetails();
+        users[i].displayDetails();
+        fos.displayMenu();
+        cout << "\nEnter the number of the item you want to order: ";
+        cin >> foodChoice;
+        price = fos.getPrice(foodChoice);
+        if (price > 0)
+        {
+            users[i].setFoodChoice(foodChoice);
+            cout << "You have selected item number " << foodChoice << " with a price of Rs " << price << endl;
+        }
+        else
+        {
+            cout << "Invalid food choice. Please try again." << endl;
+        }
+
+        string orderID, orderDate, scheduledTime;
+        cout << "\nEnter order ID: ";
+        cin >> orderID;
+        cout << "Enter order date (DD/MM/YYYY): ";
+        cin >> orderDate;
+        users[i].setOD(orderID, orderDate);
+
+        cout << "Enter scheduled delivery time (HH:MM): ";
+        cin >> scheduledTime;
+        users[i].setScheduledTime(scheduledTime);
+
+        
+        char track;
+        cout << "\nWould you like to track your order? (y/n): ";
+        cin >> track;
+
+        if (track == 'y' || track == 'Y')
+        {
+            users[i].trackOrder(users[i].getScheduledTime());  
+        }
+
+        cout << "\n";
+    }
+
+    delete[] users;
+    return 0;
+}

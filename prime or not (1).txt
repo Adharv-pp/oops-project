@@ -1,0 +1,46 @@
+1)
+
+
+#include <stdio.h>
+int main()
+{
+	int i,n,t;
+	i=2,t=1;
+	printf("ENTER THE NUMBER");
+	scanf("%d",&n);
+	while(i<n)
+	{
+		t=n%i;
+		if(t==0)
+		break;
+		i=i+1;	
+	}
+	if(t==0)	
+	printf("it is not a prime number");
+	else	
+	printf("it is a prime number");
+	return 0;
+}  
+
+
+
+2)
+
+#include<stdio.h>
+int main()
+{
+	int n,digit,temp,sum;
+	printf("Enter the number");
+	scanf("%d",&n);
+	temp=n;
+	while(n!=0)
+	{
+		digit=n%10;
+		sum=sum+digit*digit*digit;
+		n=n/10;
+	}
+	if(sum==temp)
+	printf("it is an arm strong no");
+	else
+	printf("it is not an arm strong no");	
+}

@@ -1,0 +1,172 @@
+---------------multiple&hybrid---------------
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class User 
+{
+private:
+    string name;
+    string address;
+    string phoneNumber;
+    int foodChoice;
+public:
+    User() 
+    {
+        name = "";
+        address = "";
+        phoneNumber = "";
+        foodChoice = 0;
+    }
+
+    User(string name, string address, string phoneNumber = "CUSTOMER PH NO") {
+        this->name = name;
+        this->address = address;
+        this->phoneNumber = phoneNumber;
+        this->foodChoice = 0;
+    }
+
+    void enterDetails() {
+        cin.ignore();
+        cout << "\nEnter your name: ";
+        cin >> name;
+        cout << "\nEnter your address (please don't leave space): ";
+        cin >> address;
+        cout << "\nEnter your phone number: ";
+        cin >> phoneNumber;
+    }
+
+    void setFoodChoice(int choice) 
+    {
+        foodChoice = choice;
+    }
+
+    int getFoodChoice() 
+    {
+        return foodChoice;
+    }
+
+    void displayDetails() 
+    {
+        cout << "User Details:\n";
+        cout << "Name: " << name << endl;
+        cout << "Address: " << address << endl;
+        cout << "Phone Number: " << phoneNumber << endl;
+    }
+
+    string getName() 
+    {
+        return name;
+    }
+};
+
+class PaymentDetails 
+{
+public:
+    string paymentMethod;
+    PaymentDetails() {
+        paymentMethod = "Cash";
+    }
+    void enterPaymentDetails() {
+        cout << "\nEnter payment method (e.g., Cash, Card, Online): ";
+        cin >> paymentMethod;
+    }
+    void displayPaymentDetails() 
+    {
+        cout << "Payment Method: " << paymentMethod << endl;
+    }
+};
+class CustomerDetails {
+public:
+    string membershipType;
+    CustomerDetails() {
+        membershipType = "Regular";
+    }
+    void enterMembershipDetails() {
+        cout << "\nEnter membership type (e.g., Regular, Silver, Gold): ";
+        cin >> membershipType;
+    }
+    void displayMembershipDetails() {
+        cout << "Membership Type: " << membershipType << endl;
+    }
+};
+
+class OrderUser : public User, public PaymentDetails, public CustomerDetails 
+{
+public:
+    void displayCompleteDetails() 
+    {
+        displayDetails();
+        displayPaymentDetails();
+        displayMembershipDetails();
+    }
+};
+class FoodOrderingSystem 
+{
+public:
+    void displayMenu() 
+    {
+        cout << "\nMENU:\n";
+        cout << "1. Masala dosa - Rs 80\n";
+        cout << "2. Upma - Rs 50\n";
+        cout << "3. Idli - Rs 30\n";
+        cout << "4. Vada - Rs 45\n";
+        cout << "5. Biryani - Rs 120\n";
+    }
+    double getPrice(int choice) 
+    {
+        switch (choice) 
+     {
+        case 1: return 80;
+        case 2: return 50;
+        case 3: return 30;
+        case 4: return 45;
+        case 5: return 120;
+        default: return 0.0;
+     }
+    }
+};
+int main()
+{
+    int numUsers;
+    cout << "Enter the number of users: ";
+    cin >> numUsers;
+
+    OrderUser* users = new OrderUser[numUsers];
+    FoodOrderingSystem fos;
+    int foodChoice;
+    double price;
+
+    for (int i = 0; i < numUsers; i++) {
+        cout << "\nEntering details for User " << (i + 1) << ":\n";
+        users[i].enterDetails();
+        users[i].enterPaymentDetails();
+        users[i].enterMembershipDetails();
+        users[i].displayCompleteDetails();
+        fos.displayMenu();
+        cout << "\nEnter the number of the item you want to order: ";
+        cin >> foodChoice;
+        price = fos.getPrice(foodChoice);
+        if (price > 0)
+        {
+            users[i].setFoodChoice(foodChoice);
+            cout << "\nYour total is: Rs " << price << endl;
+            cout << "\nThank you for your order, " << users[i].getName() << "!\n";
+        } else 
+        {
+            cout << "Invalid choice. Please try again.\n";
+        }
+    }
+
+    cout << "\nFinal user details:\n";
+    for (int i = 0; i < numUsers; i++) 
+    {
+        cout << "\nUser " << (i + 1) << ":\n";
+        users[i].displayCompleteDetails();
+        cout << "Food ordered: " << users[i].getFoodChoice() << endl;
+    }
+
+    delete[] users;
+    return 0;
+}
